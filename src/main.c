@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
     // Remove the newline character from the end
     userInput[strcspn(userInput, "\n")] = '\0';
-    char *fSpace = strchr(userInput, ' ');
+    char *fspace = strchr(userInput, ' ');
     char *arguments;
     if (fspace != NULL) {
       *fspace = '\0';
