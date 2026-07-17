@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
       printf("%s\n", args);
     }
     else if (!strcmp(command, "type")) {
-      if (strchr("echo exit type", args) != NULL) {
+      if (strstr("echo exit type", args) != NULL) {
         printf("%s is a shell builtin\n", args);
       }
       else {
