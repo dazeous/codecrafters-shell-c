@@ -9,14 +9,31 @@ int main(int argc, char *argv[]) {
     setbuf(stdout, NULL);
 
     printf("$ ");
-    char command[1024];
-    fgets(command, sizeof(command), stdin);
-    command[strcspn(command, "\n")] = '\0';
-    if (strcmp(command, "exit") == 0) {
+    // Buffer to store user input
+    char userInput[1024];
+
+    // Receive user input and store it in buffer
+    fgets(userInput, sizeof(userInput), stdin);
+
+    // Remove the newline character from the end
+    userInput[strcspn(userInput, "\n")] = '\0';
+    char *fSpace = strchr(userInput, ' ');
+    char *arguments;
+    if (fspace != NULL) {
+      *fspace = '\0';
+      arguments = fspace + 1;
+    }
+    char *command = userInput;
+    // If the command received is "exit", break out of the loop
+    if (!strcmp(command, "exit")) {
       break;
     }
-    printf("%s: command not found\n", command);
-
+    else if (!strcmp(command, "echo")) {
+      printf("%s\n", arguments);
+    }
+    else {
+      printf("%s: command not found\n", command);
+    }  
   }
   return 0;
 }
