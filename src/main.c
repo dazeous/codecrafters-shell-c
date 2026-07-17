@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
     // Remove the newline character from the end
     userInput[strcspn(userInput, "\n")] = '\0';
     char *fspace = strchr(userInput, ' ');
-    char *arguments;
+    char *args;
     if (fspace != NULL) {
       *fspace = '\0';
-      arguments = fspace + 1;
+      args = fspace + 1;
     }
     char *command = userInput;
     // If the command received is "exit", break out of the loop
@@ -29,7 +29,15 @@ int main(int argc, char *argv[]) {
       break;
     }
     else if (!strcmp(command, "echo")) {
-      printf("%s\n", arguments);
+      printf("%s\n", args);
+    }
+    else if (!strcmp(command, "type")) {
+      if (strchr("echo exit type", args) != NULL) {
+        printf("%s is a shell builtin\n", args);
+      }
+      else {
+        printf("%s: not found\n", args);
+      }
     }
     else {
       printf("%s: command not found\n", command);
