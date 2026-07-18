@@ -4,9 +4,9 @@
 #include <unistd.h>
 
 
-char *path = getenv("PATH");
 
 char *checkIfBinaryExists(char *args) {
+  char *path = getenv("PATH");
   char *folder = strtok(path, ";");
   while (folder != NULL) {
     strcat(folder, args);
