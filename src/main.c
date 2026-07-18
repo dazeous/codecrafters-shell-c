@@ -1,6 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
+
+char *PATH = getenv("PATH");
+
+char *checkIfBinaryExists(char *args) {
+  char *folder = strtok(PATH, ";");
+  while (folder != NULL) {
+    strcat(folder, args);
+    if (access(folder, X_OK) == 0) {
+      return folder;
+    } 
+    folder = strtok(NULL, ";");
+  }
+  return "NOT_FOUND";
+}
 
 int main(int argc, char *argv[]) {
 
@@ -36,7 +52,13 @@ int main(int argc, char *argv[]) {
         printf("%s is a shell builtin\n", args);
       }
       else {
-        printf("%s: not found\n", args);
+        char *fullPath = checkIfBinaryExists(args);
+        if (!strcmp(fullPath, "NOT_FOUND")) {
+          printf("%s: not found\n", args);
+        }
+        else {
+          printf("%s is %s\n", args, fullPath);
+        }
       }
     }
     else {
