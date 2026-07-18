@@ -4,18 +4,28 @@
 #include <unistd.h>
 
 
-
 char *checkIfBinaryExists(char *args) {
-  char *path = getenv("PATH");
-  char *folder = strtok(path, ":;");
-  while (folder != NULL) {
-    strcat(folder, args);
-    if (access(folder, X_OK) == 0) {
-      return folder;
-    } 
-    folder = strtok(NULL, ":;");
-  }
-  return "NOT_FOUND";
+    char *path = getenv("PATH");
+    char *path_copy = strdup(path);     
+
+    char *folder = strtok(path_copy, ":");
+
+    while (folder != NULL) {
+        char *fullpath = malloc(strlen(folder) + strlen(args) + 2);
+
+        sprintf(fullpath, "%s/%s", folder, args);
+
+        if (access(fullpath, X_OK) == 0) {
+            free(path_copy);
+            return fullpath;             
+        }
+
+        free(fullpath);
+        folder = strtok(NULL, ":");
+    }
+
+    free(path_copy);
+    return NULL;
 }
 
 int main(int argc, char *argv[]) {
@@ -52,12 +62,13 @@ int main(int argc, char *argv[]) {
         printf("%s is a shell builtin\n", args);
       }
       else {
-        char *fullPath = checkIfBinaryExists(args);
-        if (!strcmp(fullPath, "NOT_FOUND")) {
-          printf("%s: not found\n", args);
+        char *fullpath = checkIfBinaryExists(args);
+        if (fullpath) {
+          printf("%s is %s\n", args, fullpath);
+          free(fullpath);
         }
         else {
-          printf("%s is %s\n", args, fullPath);
+          printf("%s: not found\n", args);
         }
       }
     }
