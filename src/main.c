@@ -3,11 +3,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <ctype.h>
+
 
 // Checks if the provided argument exists in the system path and is executable, returns path if it is, None if not
 char *ifBinaryExists(char *argList) {
     char *path = getenv("PATH");
-    char *path_copy = strdup(path);     
+    char *path_copy = strdup(path);
 
     char *folder = strtok(path_copy, ":");
 
@@ -39,8 +41,9 @@ int main(int argc, char *argList[]) {
     // Buffer to store user input
     char userInput[1024];
 
-    // Receive user input and store it in buffer
-    fgets(userInput, sizeof(userInput), stdin);
+    // Receive user input and store it in buffer, if EOF, exit
+    if (!fgets(userInput, sizeof(userInput), stdin)) break;
+
 
     // Remove the newline character from the end
     userInput[strcspn(userInput, "\n")] = '\0';
@@ -53,6 +56,7 @@ int main(int argc, char *argList[]) {
       argList[argCount++] = token;
       token = strtok(NULL, " ");
     }
+    if (argCount == 0) continue;
     argList[argCount] = NULL;
     
     char *command = argList[0];
@@ -93,6 +97,10 @@ int main(int argc, char *argList[]) {
         printf("%s\n", cwd);
         free(cwd);
       }
+    }
+    else if (!strcmp(command, "cd")) {
+      if (chdir(argList[1]) != 0) 
+        printf("cd: %s: No such file or directory", argList[1]);
     }
     else {
       // Check if binary exists
