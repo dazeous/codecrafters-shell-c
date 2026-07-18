@@ -84,7 +84,7 @@ int main(int argc, char *argList[]) {
       }
     }
     else {
-      char *binPath = ifBinaryExists(command)
+      char *binPath = ifBinaryExists(command);
       if (binPath) {
         execv(binPath, argList);
       }
