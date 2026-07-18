@@ -58,7 +58,7 @@ int main(int argc, char *argList[]) {
       argList[argCount++] = token;
       token = strtok(NULL, " ");
     }
-    argList[argc] = NULL;
+    argList[argCount] = NULL;
     
     char *command = argList[0];
     // If the command received is "exit", break out of the loop
@@ -66,7 +66,7 @@ int main(int argc, char *argList[]) {
       break;
     }
     else if (!strcmp(command, "echo")) {
-      for (int i = 1; i < argc; i++) {
+      for (int i = 1; i < argCount; i++) {
         printf("%s ", argList[i]);
       }
       printf("\n");
