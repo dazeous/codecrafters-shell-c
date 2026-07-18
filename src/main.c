@@ -76,13 +76,13 @@ int main(int argc, char *argList[]) {
         printf("%s is a shell builtin\n", argList[1]);
       }
       else {
-        char *fullpath = ifBinaryExists(argList[0]);
+        char *fullpath = ifBinaryExists(argList[1]);
         if (fullpath) {
-          printf("%s is %s\n", argList[0], fullpath);
+          printf("%s is %s\n", argList[1], fullpath);
           free(fullpath);
         }
         else {
-          printf("%s: not found\n", argList[0]);
+          printf("%s: not found\n", argList[1]);
         }
       }
     }
