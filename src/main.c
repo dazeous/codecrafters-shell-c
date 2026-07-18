@@ -73,7 +73,7 @@ int main(int argc, char *argList[]) {
     else if (!strcmp(command, "type")) {
 
       //TODO: implement a better check here
-      if (strstr("echo exit type", argList[1]) != NULL) {
+      if (strstr("echo exit type pwd", argList[1]) != NULL) {
         printf("%s is a shell builtin\n", argList[1]);
       }
       else {
