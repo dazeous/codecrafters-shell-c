@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <sys/wait.h>
 
 char *ifBinaryExists(char *argList) {
     char *path = getenv("PATH");
