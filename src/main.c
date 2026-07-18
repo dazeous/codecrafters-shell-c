@@ -43,30 +43,33 @@ int main(int argc, char *argList[]) {
 
     // Remove the newline character from the end
     userInput[strcspn(userInput, "\n")] = '\0';
-    char *fspace = strchr(userInput, ' ');
-    char *args;
-    if (fspace != NULL) {
-      *fspace = '\0';
-      args = fspace + 1;
-    }
+    // char *fspace = strchr(userInput, ' ');
+    // char *args;
+    // if (fspace != NULL) {
+    //   *fspace = '\0';
+    //   args = fspace + 1;
+    // }
 
     char *argList[10];
     int argCount = 0;
 
-    char *token = strtok(args, " ");
+    char *token = strtok(userInput, " ");
     while (token != NULL) {
       argList[argCount++] = token;
       token = strtok(NULL, " ");
     }
     argList[argc] = NULL;
     
-    char *command = userInput;
+    char *command = argList[0];
     // If the command received is "exit", break out of the loop
     if (!strcmp(command, "exit")) {
       break;
     }
     else if (!strcmp(command, "echo")) {
-      printf("%s\n", args);
+      for (int i = 1; i < argc; i++) {
+        printf("%s ", argList[i]);
+      }
+      printf("\n");
     }
     else if (!strcmp(command, "type")) {
       if (strstr("echo exit type", argList[0]) != NULL) {
