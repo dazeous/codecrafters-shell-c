@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+// Checks if the provided argument exists in the system path and is executable, returns path if it is, None if not
 char *ifBinaryExists(char *argList) {
     char *path = getenv("PATH");
     char *path_copy = strdup(path);     
@@ -43,16 +44,10 @@ int main(int argc, char *argList[]) {
 
     // Remove the newline character from the end
     userInput[strcspn(userInput, "\n")] = '\0';
-    // char *fspace = strchr(userInput, ' ');
-    // char *args;
-    // if (fspace != NULL) {
-    //   *fspace = '\0';
-    //   args = fspace + 1;
-    // }
-
     char *argList[10];
     int argCount = 0;
 
+    // Create an args array
     char *token = strtok(userInput, " ");
     while (token != NULL) {
       argList[argCount++] = token;
@@ -61,17 +56,23 @@ int main(int argc, char *argList[]) {
     argList[argCount] = NULL;
     
     char *command = argList[0];
+
     // If the command received is "exit", break out of the loop
     if (!strcmp(command, "exit")) {
       break;
     }
+
+    // If the command is "echo", print everything after the first arg
     else if (!strcmp(command, "echo")) {
       for (int i = 1; i < argCount; i++) {
         printf("%s ", argList[i]);
       }
       printf("\n");
     }
+    // Handle type
     else if (!strcmp(command, "type")) {
+
+      //TODO: implement a better check here
       if (strstr("echo exit type", argList[1]) != NULL) {
         printf("%s is a shell builtin\n", argList[1]);
       }
@@ -86,17 +87,30 @@ int main(int argc, char *argList[]) {
         }
       }
     }
+    else if (!strcmp(command, "pwd")) {
+      char *cwd = getcwd(NULL, 0);
+      if (cwd) {
+        printf("%s\n", cwd);
+        free(cwd);
+      }
+    }
     else {
+      // Check if binary exists
       char *binPath = ifBinaryExists(command);
+      // If it does, fork the current process
       if (binPath) {
         pid_t pid = fork();
+        // If the process is the child, call execv
         if (pid == 0) {
           execv(binPath, argList);
         }
+        // If the process is the parent, wait for the child to terminate
         else {
           wait(NULL);
         }
+        free(binPath);
       }
+      // If the binary doesn't exist, print command not found
       else {
         printf("%s: command not found\n", command);
       }
