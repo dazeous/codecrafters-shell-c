@@ -72,8 +72,8 @@ int main(int argc, char *argList[]) {
       printf("\n");
     }
     else if (!strcmp(command, "type")) {
-      if (strstr("echo exit type", argList[0]) != NULL) {
-        printf("%s is a shell builtin\n", argList[0]);
+      if (strstr("echo exit type", argList[1]) != NULL) {
+        printf("%s is a shell builtin\n", argList[1]);
       }
       else {
         char *fullpath = ifBinaryExists(argList[0]);
@@ -89,7 +89,13 @@ int main(int argc, char *argList[]) {
     else {
       char *binPath = ifBinaryExists(command);
       if (binPath) {
-        execv(binPath, argList);
+        pid_t pid = fork();
+        if (pid == 0) {
+          execv(binPath, argList);
+        }
+        else {
+          wait(NULL);
+        }
       }
       else {
         printf("%s: command not found\n", command);
