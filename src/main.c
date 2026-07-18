@@ -7,13 +7,13 @@
 
 char *checkIfBinaryExists(char *args) {
   char *path = getenv("PATH");
-  char *folder = strtok(path, ":");
+  char *folder = strtok(path, ":;");
   while (folder != NULL) {
     strcat(folder, args);
     if (access(folder, X_OK) == 0) {
       return folder;
     } 
-    folder = strtok(NULL, ";");
+    folder = strtok(NULL, ":;");
   }
   return "NOT_FOUND";
 }
