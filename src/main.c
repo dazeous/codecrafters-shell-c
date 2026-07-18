@@ -7,7 +7,7 @@
 
 char *checkIfBinaryExists(char *args) {
   char *path = getenv("PATH");
-  char *folder = strtok(path, ";");
+  char *folder = strtok(path, ":");
   while (folder != NULL) {
     strcat(folder, args);
     if (access(folder, X_OK) == 0) {
