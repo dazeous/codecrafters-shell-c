@@ -4,10 +4,10 @@
 #include <unistd.h>
 
 
-char *PATH = getenv("PATH");
+char *path = getenv("PATH");
 
 char *checkIfBinaryExists(char *args) {
-  char *folder = strtok(PATH, ";");
+  char *folder = strtok(path, ";");
   while (folder != NULL) {
     strcat(folder, args);
     if (access(folder, X_OK) == 0) {
