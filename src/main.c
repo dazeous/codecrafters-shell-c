@@ -100,7 +100,7 @@ int main(int argc, char *argList[]) {
     }
     else if (!strcmp(command, "cd")) {
       if (chdir(argList[1]) != 0) 
-        printf("cd: %s: No such file or directory", argList[1]);
+        printf("cd: %s: No such file or directory\n", argList[1]);
     }
     else {
       // Check if binary exists
