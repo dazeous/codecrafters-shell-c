@@ -50,40 +50,7 @@ int main(int argc, char *argList[]) {
     char *argList[10];
     int argCount = 0;
 
-    // // Populate the args array
-    // char *token = strtok(userInput, " ");
-    // while (token != NULL) {
-    //   argList[argCount++] = token;
-    //   token = strtok(NULL, " ");
-    // }
 
-    
-    // char *command = argList[0];
-    int in_quotes = 0;
-    // int i = 0;
-    // char temp[1024] = "";
-    // int temp_len = 0;
-    // while (userInput[i] != '\0') { 
-    //   if (userInput[i] == '\'') {
-    //     in_quotes = !in_quotes;
-    //   }
-    //   else if (userInput[i] == ' ' && !in_quotes) {
-    //     while (userInput[i + 1] == ' ') i++;
-    //     argList[argCount++] = strdup(temp);
-    //     temp[0] = '\0';
-    //     temp_len = 0;
-    //   }
-    //   else {
-    //     temp[temp_len++] = userInput[i];
-    //     temp[temp_len] = '\0';
-    //   }
-    //   i++;
-    // }
-    // if (temp[0] != '\0') {
-    //   argList[argCount++] = strdup(temp);
-    // }
-    // if (argCount == 0) continue;
-    // argList[argCount] = NULL;
 
     char *argList[10];
     int argCount = 0;
