@@ -66,7 +66,7 @@ int main(int argc, char *argList[]) {
       if (userInput[i] == '\'') {
         in_quotes = !in_quotes;
       }
-      else if (userInput[i] == ' ' && !in_quotes) {
+      else if (userInput[i] == ' ' && in_quotes == '0') {
         argList[argCount++] = temp;
         temp[0] = '\0';
       }
