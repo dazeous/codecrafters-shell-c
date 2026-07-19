@@ -68,6 +68,7 @@ int main(int argc, char *argList[]) {
         in_quotes = !in_quotes;
       }
       else if (userInput[i] == ' ' && !in_quotes) {
+        while (userInput[i + 1] == ' ') i++;
         argList[argCount++] = strdup(temp);
         temp[0] = '\0';
         temp_len = 0;
