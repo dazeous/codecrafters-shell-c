@@ -60,30 +60,53 @@ int main(int argc, char *argList[]) {
     
     // char *command = argList[0];
     int in_quotes = 0;
-    int i = 0;
-    char temp[1024] = "";
-    int temp_len = 0;
-    while (userInput[i] != '\0') { 
-      if (userInput[i] == '\'') {
+    // int i = 0;
+    // char temp[1024] = "";
+    // int temp_len = 0;
+    // while (userInput[i] != '\0') { 
+    //   if (userInput[i] == '\'') {
+    //     in_quotes = !in_quotes;
+    //   }
+    //   else if (userInput[i] == ' ' && !in_quotes) {
+    //     while (userInput[i + 1] == ' ') i++;
+    //     argList[argCount++] = strdup(temp);
+    //     temp[0] = '\0';
+    //     temp_len = 0;
+    //   }
+    //   else {
+    //     temp[temp_len++] = userInput[i];
+    //     temp[temp_len] = '\0';
+    //   }
+    //   i++;
+    // }
+    // if (temp[0] != '\0') {
+    //   argList[argCount++] = strdup(temp);
+    // }
+    // if (argCount == 0) continue;
+    // argList[argCount] = NULL;
+
+    char *read = userInput;
+    char *write = userInput;
+    argList[argCount++] = write;
+    while (*read != '\0') {
+      if (*read == '\'') {
         in_quotes = !in_quotes;
       }
-      else if (userInput[i] == ' ' && !in_quotes) {
-        while (userInput[i + 1] == ' ') i++;
-        argList[argCount++] = strdup(temp);
-        temp[0] = '\0';
-        temp_len = 0;
+      else if (*read == ' ' && !in_quotes) {
+        while (*(read + 1) == ' ') read++;
+        *write = '\0';
+        write++;
+        argList[argCount++] = write;
       }
       else {
-        temp[temp_len++] = userInput[i];
-        temp[temp_len] = '\0';
+        *write = *read;
+        write++;
       }
-      i++;
+      read++;
     }
-    if (temp[0] != '\0') {
-      argList[argCount++] = strdup(temp);
-    }
-    if (argCount == 0) continue;
-    argList[argCount] = NULL;
+    *write = '\0';
+
+
     char *command = argList[0];
     // If the command received is "exit", break out of the loop
     if (!strcmp(command, "exit")) {
