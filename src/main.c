@@ -91,7 +91,6 @@ int main(int argc, char *argList[]) {
     char *read = userInput;
     char *write = userInput;
 
-    int in_quotes = 0;
     int in_word = 0;
 
     while (*read != '\0') {
