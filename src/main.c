@@ -7,16 +7,16 @@
 
 
 // Checks if the provided argument exists in the system path and is executable, returns path if it is, None if not
-char *ifBinaryExists(char *argList) {
+char *ifBinaryExists(char *arg) {
     char *path = getenv("PATH");
     char *path_copy = strdup(path);
 
     char *folder = strtok(path_copy, ":");
 
     while (folder != NULL) {
-        char *fullpath = malloc(strlen(folder) + strlen(argList) + 2);
+        char *fullpath = malloc(strlen(folder) + strlen(arg) + 2);
 
-        sprintf(fullpath, "%s/%s", folder, argList);
+        sprintf(fullpath, "%s/%s", folder, arg);
 
         if (access(fullpath, X_OK) == 0) {
             free(path_copy);
@@ -50,16 +50,37 @@ int main(int argc, char *argList[]) {
     char *argList[10];
     int argCount = 0;
 
-    // Create an args array
-    char *token = strtok(userInput, " ");
-    while (token != NULL) {
-      argList[argCount++] = token;
-      token = strtok(NULL, " ");
-    }
-    if (argCount == 0) continue;
-    argList[argCount] = NULL;
+    // // Populate the args array
+    // char *token = strtok(userInput, " ");
+    // while (token != NULL) {
+    //   argList[argCount++] = token;
+    //   token = strtok(NULL, " ");
+    // }
+    // if (argCount == 0) continue;
+    // argList[argCount] = NULL;
     
-    char *command = argList[0];
+    // char *command = argList[0];
+    bool in_quotes = false;
+    int i = 0;
+    char *temp = "";
+    while (userInput[i] != '\0') { 
+      if (userInput[i] == "'") {
+        in_quotes = !in_quotes;
+      }
+      else if (userInput[i] == " " && !in_quotes) {
+        argList[argCount++] = temp;
+        temp = "";
+      }
+      else {
+        int len = strlen(temp);
+        temp[len] = userInput[i];
+        temp[len + 1] = '\0';
+      }
+      i++;
+    }
+    if (temp) {
+      argList[argCount++] = temp;
+    }
 
     // If the command received is "exit", break out of the loop
     if (!strcmp(command, "exit")) {
@@ -77,7 +98,7 @@ int main(int argc, char *argList[]) {
     else if (!strcmp(command, "type")) {
 
       //TODO: implement a better check here
-      if (strstr("echo exit type pwd", argList[1]) != NULL) {
+      if (strstr("echo exit type pwd cd", argList[1]) != NULL) {
         printf("%s is a shell builtin\n", argList[1]);
       }
       else {
