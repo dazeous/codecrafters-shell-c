@@ -85,27 +85,49 @@ int main(int argc, char *argList[]) {
     // if (argCount == 0) continue;
     // argList[argCount] = NULL;
 
+    char *argList[10];
+    int argCount = 0;
+
     char *read = userInput;
     char *write = userInput;
-    argList[argCount++] = write;
-    while (*read != '\0') {
-      if (*read == '\'') {
-        in_quotes = !in_quotes;
-      }
-      else if (*read == ' ' && !in_quotes) {
-        while (*(read + 1) == ' ') read++;
-        *write = '\0';
-        write++;
-        argList[argCount++] = write;
-      }
-      else {
-        *write = *read;
-        write++;
-      }
-      read++;
-    }
-    *write = '\0';
 
+    int in_quotes = 0;
+    int in_word = 0;
+
+    while (*read != '\0') {
+
+        if (*read == '\'') {
+            in_quotes = !in_quotes;
+        }
+        else if (*read == ' ' && !in_quotes) {
+
+            if (in_word) {
+                *write = '\0';
+                write++;
+                in_word = 0;
+            }
+
+            // Otherwise ignore extra/leading spaces
+        }
+        else {
+
+            if (!in_word) {
+                argList[argCount++] = write;
+                in_word = 1;
+            }
+
+            *write = *read;
+            write++;
+        }
+
+        read++;
+    }
+
+    if (in_word) {
+        *write = '\0';
+    }
+
+argList[argCount] = NULL;
 
     char *command = argList[0];
     // If the command received is "exit", break out of the loop
