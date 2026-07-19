@@ -62,7 +62,7 @@ int main(int argc, char *argList[]) {
     // char *command = argList[0];
     int in_quotes = 0;
     int i = 0;
-    char *temp = "";
+    char temp[50];
     while (userInput[i] != '\0') { 
       if (userInput[i] == '\'') {
         in_quotes = !in_quotes;
