@@ -60,14 +60,14 @@ int main(int argc, char *argList[]) {
     // argList[argCount] = NULL;
     
     // char *command = argList[0];
-    bool in_quotes = false;
+    int in_quotes = 0;
     int i = 0;
     char *temp = "";
     while (userInput[i] != '\0') { 
-      if (userInput[i] == "'") {
+      if (userInput[i] == '\'') {
         in_quotes = !in_quotes;
       }
-      else if (userInput[i] == " " && !in_quotes) {
+      else if (userInput[i] == ' ' && !in_quotes) {
         argList[argCount++] = temp;
         temp = "";
       }
@@ -81,7 +81,7 @@ int main(int argc, char *argList[]) {
     if (temp) {
       argList[argCount++] = temp;
     }
-
+    char *command = argList[0];
     // If the command received is "exit", break out of the loop
     if (!strcmp(command, "exit")) {
       break;
