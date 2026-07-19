@@ -69,7 +69,7 @@ int main(int argc, char *argList[]) {
       }
       else if (userInput[i] == ' ' && !in_quotes) {
         argList[argCount++] = temp;
-        temp = "";
+        temp[0] = '\0';
       }
       else {
         int len = strlen(temp);
