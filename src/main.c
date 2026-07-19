@@ -56,8 +56,7 @@ int main(int argc, char *argList[]) {
     //   argList[argCount++] = token;
     //   token = strtok(NULL, " ");
     // }
-    // if (argCount == 0) continue;
-    // argList[argCount] = NULL;
+
     
     // char *command = argList[0];
     int in_quotes = 0;
@@ -81,6 +80,8 @@ int main(int argc, char *argList[]) {
     if (temp) {
       argList[argCount++] = temp;
     }
+    if (argCount == 0) continue;
+    argList[argCount] = NULL;
     char *command = argList[0];
     // If the command received is "exit", break out of the loop
     if (!strcmp(command, "exit")) {
