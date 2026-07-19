@@ -61,24 +61,25 @@ int main(int argc, char *argList[]) {
     // char *command = argList[0];
     int in_quotes = 0;
     int i = 0;
-    char temp[50];
+    char temp[1024] = "";
+    int temp_len = 0;
     while (userInput[i] != '\0') { 
       if (userInput[i] == '\'') {
         in_quotes = !in_quotes;
       }
-      else if (userInput[i] == ' ' && in_quotes == '0') {
-        argList[argCount++] = temp;
+      else if (userInput[i] == ' ' && !in_quotes) {
+        argList[argCount++] = strdup(temp);
         temp[0] = '\0';
+        temp_len = 0;
       }
       else {
-        int len = strlen(temp);
-        temp[len] = userInput[i];
-        temp[len + 1] = '\0';
+        temp[temp_len++] = userInput[i];
+        temp[temp_len] = '\0';
       }
       i++;
     }
-    if (temp) {
-      argList[argCount++] = temp;
+    if (temp[0] != '\0') {
+      argList[argCount++] = strdup(temp);
     }
     if (argCount == 0) continue;
     argList[argCount] = NULL;
