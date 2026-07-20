@@ -47,8 +47,6 @@ int main(int argc, char *argList[]) {
 
     // Remove the newline character from the end
     userInput[strcspn(userInput, "\n")] = '\0';
-
-
     char *argList[10];
     int argCount = 0;
 
@@ -91,7 +89,7 @@ int main(int argc, char *argList[]) {
         *write = '\0';
     }
 
-argList[argCount] = NULL;
+    argList[argCount] = NULL;
 
     char *command = argList[0];
     // If the command received is "exit", break out of the loop
