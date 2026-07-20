@@ -58,7 +58,7 @@ int main(int argc, char *argList[]) {
 
     while (*read != '\0') {
 
-        if (*read == '\'') {
+        if (*read == '\'' or *read == '"') {
             in_quotes = !in_quotes;
         }
         else if (*read == ' ' && !in_quotes) {
