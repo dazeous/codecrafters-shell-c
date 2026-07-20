@@ -53,15 +53,19 @@ int main(int argc, char *argList[]) {
     char *read = userInput;
     char *write = userInput;
 
-    int in_quotes = 0;
+    int in_single_quotes = 0;
+    int in_double_quotes = 0;
     int in_word = 0;
 
     while (*read != '\0') {
 
-        if (*read == '\'' || *read == '"') {
-            in_quotes = !in_quotes;
+        if (*read == '\'' && !in_double_quotes) {
+          in_single_quotes = !in_single_quotes;
         }
-        else if (*read == ' ' && !in_quotes) {
+        else if (*read == '"' && !in_single_quotes) {
+          in_double_quotes = !in_double_quotes;
+        }
+        else if (*read == ' ' && !in_single_quotes && !in_double_quotes) {
 
             if (in_word) {
                 *write = '\0';
