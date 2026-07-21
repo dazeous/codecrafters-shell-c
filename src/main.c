@@ -67,7 +67,7 @@ int main(int argc, char *argList[]) {
           in_double_quotes = !in_double_quotes;
         }
         else if (*read == '\\' && !in_double_quotes && !in_single_quotes) {
-          escape_sequenced = 1
+          escape_sequenced = 1;
         }
         else if (*read == ' ' && !in_single_quotes && !in_double_quotes && !escape_sequenced) {
 
