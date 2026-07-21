@@ -59,40 +59,41 @@ int main(int argc, char *argList[]) {
     int escape_sequenced = 0;
 
     while (*read != '\0') {
-
-        if (*read == '\'' && !in_double_quotes && !escape_sequenced) {
-          in_single_quotes = !in_single_quotes;
-        }
-        else if (*read == '"' && !in_single_quotes && !escape_sequenced) {
-          in_double_quotes = !in_double_quotes;
-        }
-        else if (*read == '\\' && !in_double_quotes && !in_single_quotes) {
-          escape_sequenced = 1;
-        }
-        else if (*read == ' ' && !in_single_quotes && !in_double_quotes && !escape_sequenced) {
-
-          if (in_word) {
-              *write = '\0';
-              write++;
-              in_word = 0;
-          }
-
-            // Otherwise ignore extra/leading spaces
-        }
-        else {
-            if (escape_sequenced) escape_sequenced = 0;
+        if (escape_sequenced) {
+            // Current character is escaped; write it as literal text
             if (!in_word) {
                 argList[argCount++] = write;
                 in_word = 1;
             }
-
-            *write = *read;
-            write++;
+            *write++ = *read;
+            escape_sequenced = 0;
+        } 
+        else if (*read == '\\' && !in_double_quotes && !in_single_quotes) {
+            // Backslash outside quotes triggers escape mode
+            escape_sequenced = 1;
+        } 
+        else if (*read == '\'' && !in_double_quotes) {
+            in_single_quotes = !in_single_quotes;
+        } 
+        else if (*read == '"' && !in_single_quotes) {
+            in_double_quotes = !in_double_quotes;
+        } 
+        else if (*read == ' ' && !in_single_quotes && !in_double_quotes) {
+            if (in_word) {
+                *write++ = '\0';
+                in_word = 0;
+            }
+        } 
+        else {
+            if (!in_word) {
+                argList[argCount++] = write;
+                in_word = 1;
+            }
+            *write++ = *read;
         }
         read++;
     }
-
-    if (in_word) {
+        if (in_word) {
         *write = '\0';
     }
 
@@ -107,7 +108,7 @@ int main(int argc, char *argList[]) {
     // If the command is "echo", print everything after the first arg
     else if (!strcmp(command, "echo")) {
       for (int i = 1; i < argCount; i++) {
-        printf("%s ", argList[i]);
+        printf("%s ", argList[i], (i == argCount - 1) ? "" : " ");
       }
       printf("\n");
     }
@@ -168,3 +169,4 @@ int main(int argc, char *argList[]) {
   }
   return 0;
 }
+ 
