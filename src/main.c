@@ -72,21 +72,18 @@ int main(int argc, char *argList[]) {
 
     while (*read != '\0') {
         if (escape_sequenced) {
-            // Current character is escaped; write it as literal text
-            if (!in_word) {
-                argList[argCount++] = write;
-                in_word = 1;
-            }
-            *write++ = *read;
-            escape_sequenced = 0;
+          // Current character is escaped; write it as literal text
+          if (!in_word) {
+              argList[argCount++] = write;
+              in_word = 1;
+          }
+          *write++ = *read;
+          escape_sequenced = 0;
         } 
-        else if (*read == '\\') {
+        else if (*read == '\\' && (!in_double_quotes && !in_double_quotes) || (in_double_quotes && strchr("\"$`\n\\", *(read + 1)))) {
             // Backslash outside quotes triggers escape mode
-            if (!in_single_quotes && !in_double_quotes) escape_sequenced = 1;
-            else if (in_double_quotes) {
-              if (strchr("\"$`\n\\", *(read + 1))) escape_sequenced = 1;
-            }
-        } 
+          escape_sequenced = 1;
+        }
         else if (*read == '\'' && !in_double_quotes) {
             in_single_quotes = !in_single_quotes;
         } 
