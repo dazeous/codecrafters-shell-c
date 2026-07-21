@@ -5,6 +5,18 @@
 #include <sys/wait.h>
 #include <ctype.h>
 
+const char *builtins[] = {"echo", "exit", "type", "pwd", "cd", NULL};
+
+// Helper function to check if a command is a builtin
+int is_builtin(const char *cmd) {
+    if (!cmd) return 0;
+    for (int i = 0; builtins[i] != NULL; i++) {
+        if (strcmp(builtins[i], cmd) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 // Checks if the provided argument exists in the system path and is executable, returns path if it is, None if not
 char *ifBinaryExists(char *arg) {
@@ -116,7 +128,7 @@ int main(int argc, char *argList[]) {
     else if (!strcmp(command, "type")) {
 
       //TODO: implement a better check here
-      if (strstr("echo exit type pwd cd", argList[1]) != NULL) {
+      if (is_builtin(argList[1])) {
         printf("%s is a shell builtin\n", argList[1]);
       }
       else {
