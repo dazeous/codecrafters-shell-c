@@ -80,9 +80,12 @@ int main(int argc, char *argList[]) {
             *write++ = *read;
             escape_sequenced = 0;
         } 
-        else if (*read == '\\' && !in_double_quotes && !in_single_quotes) {
+        else if (*read == '\\') {
             // Backslash outside quotes triggers escape mode
-            escape_sequenced = 1;
+            if (!in_single_quotes && !in_double_quotes) escape_sequenced = 1;
+            else if (in_double_quotes) {
+              if (strchr("\"$`\n", *(read + 1))) escape_sequenced = 1;
+            }
         } 
         else if (*read == '\'' && !in_double_quotes) {
             in_single_quotes = !in_single_quotes;
