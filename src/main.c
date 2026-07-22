@@ -121,6 +121,9 @@ int main(int argc, char *argList[]) {
 
     char *outfile = NULL;
     int append_mode = 0;
+
+    char *errfile = NULL;
+    int err_append_mode = 0;
     for (int i = 0; i < argCount; i++) {
         if (!strcmp(argList[i], ">") || !strcmp(argList[i], "1>")) {
             outfile = argList[i + 1];
@@ -135,6 +138,20 @@ int main(int argc, char *argList[]) {
             argCount = i;
             break;
         }
+        else if (!strcmp(argList[i], "2>")) {
+            errfile = argList[i + 1];
+            err_append_mode = 0;
+            argList[i] = NULL;
+            argCount = i;
+            break;
+        }
+        else if (!strcmp(argList[i], "2>>")) {
+          errfile = argList[i + 1];
+          err_append_mode = 1;
+          argList[i] = NULL;
+          argCount = i;
+          break;
+        }
     }
 
     int saved_stdout = -1;
@@ -148,6 +165,16 @@ int main(int argc, char *argList[]) {
         }
     }
 
+    int saved_stderr = -1;
+    if (errfile != NULL) {
+      saved_stderr = dup(STDERR_FILENO);
+      int flags = O_WRONLY | O_CREAT | (err_append_mode ? O_APPEND : O_TRUNC);
+      int fd = open(errfile, flags, 0644);
+      int (fd >= 0) {
+        dup2(fd, STDERR_FILENO);
+        close(fd);
+      }
+    }
     // Skip execution if user just pressed Enter
     if (argCount == 0) {
         if (saved_stdout != -1) {
@@ -226,6 +253,11 @@ int main(int argc, char *argList[]) {
     if (saved_stdout != -1) {
       dup2(saved_stdout, STDOUT_FILENO);
       close(saved_stdout);
+    }
+
+    if (saved_stderr != -1) {
+      dup2(saved_stderr, STDERR_FILENO);
+      close(saved_stderr);
     }
   }
 
