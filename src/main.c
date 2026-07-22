@@ -8,7 +8,7 @@
 char *builtins[] = {"echo", "exit", "type", "pwd", "cd", NULL};
 
 // Helper function to check if a command is a builtin
-int does_exist_in_array(char *array, char *cmd) {
+int does_exist_in_array(char *array[], char *cmd) {
     for (int i = 0; array[i] != NULL; i++) {
         if (strcmp(array[i], cmd) == 0) {
             return 1;
