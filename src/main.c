@@ -122,30 +122,39 @@ int main(int argc, char *argList[]) {
     char *outfile = NULL;
     int append_mode = 0;
     for (int i = 0; i < argCount; i++) {
-      if (!strcmp(argList[i], ">")) {
-        outfile = argList[i + 1];
-        append_mode = 0;
-        argList[i] = NULL;
-        argCount = i;
-        break;
-      } else if (!strcmp(argList[i], ">>") == 0) {
-        outfile = argList[i + 1];
-        append_mode = 1;
-        argList[i] = NULL;
-        argCount = i;
-        break;
-      }
+        if (!strcmp(argList[i], ">") || !strcmp(argList[i], "1>")) {
+            outfile = argList[i + 1];
+            append_mode = 0;
+            argList[i] = NULL;
+            argCount = i;
+            break;
+        } else if (!strcmp(argList[i], ">>") || !strcmp(argList[i], "1>>")) {
+            outfile = argList[i + 1];
+            append_mode = 1;
+            argList[i] = NULL;
+            argCount = i;
+            break;
+        }
     }
 
     int saved_stdout = -1;
     if (outfile != NULL) {
-      saved_stdout = dup(STDOUT_FILENO);
-      int flags = O_WRONLY | O_CREAT | (append_mode ? O_APPEND : O_TRUNC);
-      int fd = open(outfile, flags, 0644);
-      if (fd >= 0) {
-        dup2(fd, STDOUT_FILENO);
-        close(fd);
-      }
+        saved_stdout = dup(STDOUT_FILENO);
+        int flags = O_WRONLY | O_CREAT | (append_mode ? O_APPEND : O_TRUNC);
+        int fd = open(outfile, flags, 0644);
+        if (fd >= 0) {
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        }
+    }
+
+    // Skip execution if user just pressed Enter
+    if (argCount == 0) {
+        if (saved_stdout != -1) {
+            dup2(saved_stdout, STDOUT_FILENO);
+            close(saved_stdout);
+        }
+        continue;
     }
 
     char *command = argList[0];
