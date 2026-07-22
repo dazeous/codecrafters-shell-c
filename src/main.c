@@ -170,7 +170,7 @@ int main(int argc, char *argList[]) {
       saved_stderr = dup(STDERR_FILENO);
       int flags = O_WRONLY | O_CREAT | (err_append_mode ? O_APPEND : O_TRUNC);
       int fd = open(errfile, flags, 0644);
-      int (fd >= 0) {
+      if (fd >= 0) {
         dup2(fd, STDERR_FILENO);
         close(fd);
       }
