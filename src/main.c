@@ -133,6 +133,7 @@ int main(int argc, char *argList[]) {
         printf("\n");
 
       }
+    }
     // Handle type
     else if (!strcmp(command, "type")) {
 
