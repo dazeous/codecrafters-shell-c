@@ -160,7 +160,7 @@ int main(int argc, char *argList[]) {
         printf("%s%s", argList[i], (i == argCount - 1) ? "" : " ");
       }
       printf("\n");
-  }
+    }
     // Handle type
     else if (!strcmp(command, "type")) {
 
@@ -214,12 +214,12 @@ int main(int argc, char *argList[]) {
         printf("%s: command not found\n", command);
       }
     }  
+    if (saved_stdout != -1) {
+      dup2(saved_stdout, STDOUT_FILENO);
+      close(saved_stdout);
+    }
   }
 
-  if (saved_stdout != -1) {
-    dup2(saved_stdout, STDOUT_FILENO);
-    close(saved_stdout);
-  }
   return 0;
 }
  
