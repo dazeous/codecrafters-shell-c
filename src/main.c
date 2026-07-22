@@ -4,13 +4,15 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <ctype.h>
+#include <fcntl.h>
+
 
 char *builtins[] = {"echo", "exit", "type", "pwd", "cd", NULL};
 
 // Helper function to check if a command is a builtin
-int does_exist_in_array(char *array[], char *cmd) {
-    for (int i = 0; array[i] != NULL; i++) {
-        if (strcmp(array[i], cmd) == 0) {
+int ifBuiltin(char *cmd) {
+    for (int i = 0; builtins[i] != NULL; i++) {
+        if (strcmp(builtins[i], cmd) == 0) {
             return 1;
         }
     }
@@ -58,8 +60,12 @@ int main(int argc, char *argList[]) {
 
     // Remove the newline character from the end
     userInput[strcspn(userInput, "\n")] = '\0';
+
+
+    // Input parsing begins here
     char *argList[10];
     int argCount = 0;
+
 
     char *read = userInput;
     char *write = userInput;
@@ -110,6 +116,38 @@ int main(int argc, char *argList[]) {
 
     argList[argCount] = NULL;
 
+    // Input parsing ends here
+
+
+    char *outfile = NULL;
+    int append_mode = 0;
+    for (int i = 0; i < argCount; i++) {
+      if (!strcmp(argList[i], ">")) {
+        outfile = argList[i + 1];
+        append_mode = 0;
+        argList[i] = NULL;
+        argCount = i;
+        break;
+      } else if (!strcmp(argList[i], ">>") == 0) {
+        outfile = argList[i + 1];
+        append_mode = 1;
+        argList[i] = NULL;
+        argCount = i;
+        break;
+      }
+    }
+
+    int saved_stdout = -1;
+    if (outfile != NULL) {
+      saved_stdout = dup(STDOUT_FILENO);
+      int flags = O_WRONLY | O_CREAT | (append_mode ? O_APPEND : O_TRUNC);
+      int fd = open(outfile, flags, 0644);
+      if (fd >= 0) {
+        dup2(fd, STDOUT_FILENO);
+        close(fd);
+      }
+    }
+
     char *command = argList[0];
     // If the command received is "exit", break out of the loop
     if (!strcmp(command, "exit")) {
@@ -118,26 +156,15 @@ int main(int argc, char *argList[]) {
 
     // If the command is "echo", print everything after the first arg
     else if (!strcmp(command, "echo")) {
-      if (does_exist_in_array(argList, ">")) {
-      FILE *file = fopen(argList[argCount - 1], "w");
-        for (int i = 1; !strcmp(argList[i], ">"); i++) {
-          fprintf(file, argList[i], "\n");
-        }
-        fclose(file);
+      for (int i = 1; i < argCount; i++) {
+        printf("%s%s", argList[i], (i == argCount - 1) ? "" : " ");
       }
-      
-      else {
-        for (int i = 1; i < argCount; i++) {
-          printf("%s%s", argList[i], (i == argCount - 1) ? "" : " ");
-        }
-        printf("\n");
-
-      }
-    }
+      printf("\n");
+  }
     // Handle type
     else if (!strcmp(command, "type")) {
 
-      if (does_exist_in_array(builtins, argList[1])) {
+      if (ifBuiltin(argList[1])) {
         printf("%s is a shell builtin\n", argList[1]);
       }
       else {
@@ -187,6 +214,11 @@ int main(int argc, char *argList[]) {
         printf("%s: command not found\n", command);
       }
     }  
+  }
+
+  if (saved_stdout != -1) {
+    dup2(saved_stdout, STDOUT_FILENO);
+    close(saved_stdout);
   }
   return 0;
 }
