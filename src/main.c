@@ -5,13 +5,12 @@
 #include <sys/wait.h>
 #include <ctype.h>
 
-const char *builtins[] = {"echo", "exit", "type", "pwd", "cd", NULL};
+char *builtins[] = {"echo", "exit", "type", "pwd", "cd", NULL};
 
 // Helper function to check if a command is a builtin
-int is_builtin(const char *cmd) {
-    if (!cmd) return 0;
-    for (int i = 0; builtins[i] != NULL; i++) {
-        if (strcmp(builtins[i], cmd) == 0) {
+int does_exist_in_array(char *array, char *cmd) {
+    for (int i = 0; array[i] != NULL; i++) {
+        if (strcmp(array[i], cmd) == 0) {
             return 1;
         }
     }
@@ -119,16 +118,25 @@ int main(int argc, char *argList[]) {
 
     // If the command is "echo", print everything after the first arg
     else if (!strcmp(command, "echo")) {
-      for (int i = 1; i < argCount; i++) {
-        printf("%s ", argList[i], (i == argCount - 1) ? "" : " ");
+      if (does_exist_in_array(argList, ">")) {
+        FILE *file = fopen(argList[argCount - 1], "w") {
+          for (int i = 1; !strcmp(argList[i], ">"); i++) {
+            fprintf(file, argList[i], "\n");
+          }
+        }
+        fclose(file);
       }
-      printf("\n");
-    }
+      else {
+        for (int i = 1; i < argCount; i++) {
+          printf("%s%s", argList[i], (i == argCount - 1) ? "" : " ");
+        }
+        printf("\n");
+
+      }
     // Handle type
     else if (!strcmp(command, "type")) {
 
-      //TODO: implement a better check here
-      if (is_builtin(argList[1])) {
+      if (does_exist_in_array(builtins, argList[1])) {
         printf("%s is a shell builtin\n", argList[1]);
       }
       else {
