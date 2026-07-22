@@ -119,13 +119,13 @@ int main(int argc, char *argList[]) {
     // If the command is "echo", print everything after the first arg
     else if (!strcmp(command, "echo")) {
       if (does_exist_in_array(argList, ">")) {
-        FILE *file = fopen(argList[argCount - 1], "w") {
-          for (int i = 1; !strcmp(argList[i], ">"); i++) {
-            fprintf(file, argList[i], "\n");
-          }
+      FILE *file = fopen(argList[argCount - 1], "w");
+        for (int i = 1; !strcmp(argList[i], ">"); i++) {
+          fprintf(file, argList[i], "\n");
         }
         fclose(file);
       }
+      
       else {
         for (int i = 1; i < argCount; i++) {
           printf("%s%s", argList[i], (i == argCount - 1) ? "" : " ");
