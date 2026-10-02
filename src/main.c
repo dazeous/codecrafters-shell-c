@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include <fcntl.h>
-
+#include <termios.h>
 
 char *builtins[] = {"echo", "exit", "type", "pwd", "cd", NULL};
 
